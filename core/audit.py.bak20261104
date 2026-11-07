@@ -1,0 +1,112 @@
+"""审计：对一轮 LLM 请求做注入明细解析。
+
+base（早于其他插件钩子）记录人格与前缀的基线；
+final（晚于其他插件钩子）解析全部注入块 + 执行摘除。
+"""
+
+from __future__ import annotations
+
+from typing import Any
+
+from .models import (
+    InjectBlock,
+    TurnSnapshot,
+    parse_tag_blocks,
+    split_persona_block,
+    strip_tag_blocks,
+)
+
+
+def collect_text_parts(req: Any) -> list[tuple[int, str]]:
+    """列出 extra_user_content_parts 里的文本段 [(下标, 文本)]。"""
+    parts = getattr(req, "extra_user_content_parts", None)
+    if not parts:
+        return []
+    out: list[tuple[int, str]] = []
+    for index, part in enumerate(parts):
+        text = getattr(part, "text", None)
+        if text is None and isinstance(part, dict):
+            text = part.get("text")
+        if isinstance(text, str) and text.strip():
+            out.append((index, text))
+    return out
+
+
+def measure_injection(req: Any) -> tuple[int, int]:
+    """量一次当前注入体积：返回 (system_prompt 字符数, 附加文本段总字符数)。
+
+    摘除 / 人格卡替换之后必须重新量一次，否则面板上「注入前 → 注入后」
+    两个数会永远相等，看着像没生效。
+    """
+    system = getattr(req, "system_prompt", "") or ""
+    parts = sum(len(text) for _index, text in collect_text_parts(req))
+    return len(system), parts
+
+
+def snapshot_blocks(req: Any) -> tuple[TurnSnapshot, str]:
+    """解析当前 req 的全部注入块。返回 (快照, 人格原文)。
+
+    人格原文从 system_prompt 里拆（# Persona Instructions 锚点）。
+    """
+    system = getattr(req, "system_prompt", "") or ""
+    persona_text, _rest = split_persona_block(system)
+
+    snap = TurnSnapshot(t=0.0, umo="")
+    snap.before_chars = len(system)
+
+    blocks: list[InjectBlock] = []
+    if persona_text:
+        blocks.append(
+            InjectBlock(
+                kind="persona",
+                tag="",
+                owner="(persona)",
+                text=persona_text,
+                chars=len(persona_text),
+                where="system",
+                removable=False,   # 人格块由人格卡功能管，这里不让随手摘
+            )
+        )
+    blocks.extend(parse_tag_blocks(system, "system"))
+    for _index, text in collect_text_parts(req):
+        blocks.extend(parse_tag_blocks(text, "content_part"))
+
+    snap.parts_chars = sum(len(text) for _i, text in collect_text_parts(req))
+    snap.after_chars = len(system)
+    snap.blocks = blocks
+    return snap, persona_text
+
+
+def apply_trim(req: Any, tags: set[str]) -> list[str]:
+    """对 req 执行摘除：system_prompt + 各文本段都过一遍 strip。
+
+    返回实际摘掉的 tag 列表（去重保序）。
+    """
+    if not tags:
+        return []
+    removed_all: list[str] = []
+
+    system = getattr(req, "system_prompt", "") or ""
+    if system:
+        new_system, removed = strip_tag_blocks(system, tags)
+        if removed:
+            req.system_prompt = new_system
+            removed_all.extend(removed)
+
+    parts = getattr(req, "extra_user_content_parts", None)
+    if parts:
+        for part in parts:
+            text = getattr(part, "text", None)
+            if not isinstance(text, str) or not text:
+                continue
+            new_text, removed = strip_tag_blocks(text, tags)
+            if removed:
+                try:
+                    part.text = new_text
+                except Exception:  # noqa: BLE001 - 真改不动就跳过（如只读 part）
+                    pass
+                removed_all.extend(removed)
+
+    # 去重保序
+    seen: set[str] = set()
+    return [t for t in removed_all if not (t in seen or seen.add(t))]

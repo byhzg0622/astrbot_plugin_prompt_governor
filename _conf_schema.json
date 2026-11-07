@@ -1,0 +1,108 @@
+{
+  "enabled": {
+    "description": "总开关",
+    "type": "bool",
+    "default": true,
+    "hint": "关闭后不审计、不摘除、不注入人格卡；已生成的人格卡数据保留。"
+  },
+  "audit": {
+    "description": "审计",
+    "type": "object",
+    "hint": "每轮 LLM 请求拍两次快照（其他插件注入前 / 注入后），diff 出增量块并在面板展示。",
+    "items": {
+      "enabled": {
+        "description": "启用审计",
+        "type": "bool",
+        "default": true,
+        "hint": "纯读操作，零风险；关闭后面板看不到本轮注入明细。"
+      },
+      "history_limit": {
+        "description": "审计记录保留轮数",
+        "type": "int",
+        "default": 200,
+        "hint": "每个会话保留最近 N 轮的审计记录，超过即淘汰最旧的。"
+      },
+      "capture_content": {
+        "description": "记录注入块全文",
+        "type": "bool",
+        "default": true,
+        "hint": "关闭后只记录字符数与位置，不存正文（更省空间，面板点开看不到内容）。"
+      }
+    }
+  },
+  "persona_card": {
+    "description": "人格卡",
+    "type": "object",
+    "hint": "把人格整理成『摘要 + 若干部分』的档案。每轮只注入摘要和部分目录，要哪部分由模型用 recall_persona(section=…) 取哪部分，不再重复注入整份人格。",
+    "items": {
+      "enabled": {
+        "description": "启用人格卡模式",
+        "type": "bool",
+        "default": false,
+        "hint": "默认关闭。开启后：当前会话人格全文不再进 system_prompt，改为注入『摘要 + 可用部分目录』（很短），并提供 recall_persona 工具按需取回某一部分的全文。"
+      },
+      "max_chars": {
+        "description": "人格卡长度上限",
+        "type": "int",
+        "default": 200,
+        "hint": "整份档案（摘要 + 各分区正文合计）的字符数上限，超出会被截断。常驻注入的只有摘要部分。"
+      },
+      "sections": {
+        "description": "人格卡分区",
+        "type": "text",
+        "default": "",
+        "hint": "留空用默认四区。也可自定义，每行一个：key=中文名（可加冒号写说明），例如 behavior=行为举止:语气、口头禅、动作。key 用英文，模型按 key 或中文名都能召回。"
+      }
+    }
+  },
+  "scan": {
+    "description": "全通道注入检测（v1.3）",
+    "type": "object",
+    "hint": "三层检测：①<tag> 标记块扫全部 5 通道；②已知无标记锚点；③基线 diff 兜住无 tag 裸注入。最下游钩子补扫 agent 多轮。",
+    "items": {
+      "full_channel": {
+        "description": "全通道扫描（含历史消息 / 工具结果）",
+        "type": "bool",
+        "default": true,
+        "hint": "关后只扫 system_prompt 与附加段（旧版行为）。"
+      },
+      "anchor_scan": {
+        "description": "已知无标记锚点检测",
+        "type": "bool",
+        "default": true,
+        "hint": "识别 <system_reminder>、# Persona Instructions、kb_result 等核心/插件注入。"
+      },
+      "baseline_diff": {
+        "description": "基线 diff（兜无 tag 裸注入）",
+        "type": "bool",
+        "default": true,
+        "hint": "base 钩子拍全通道指纹，final 钩子 diff 出被追加/改写的裸文本。"
+      },
+      "agent_done_audit": {
+        "description": "最下游补审计（agent 多轮）",
+        "type": "bool",
+        "default": true,
+        "hint": "on_agent_done 读 run_context.messages（真正发给模型的每一个字）补记一轮审计。"
+      }
+    }
+  },
+  "trim": {
+    "description": "注入精简",
+    "type": "object",
+    "hint": "按会话摘除带标记的注入块，或按会话关闭整个插件（走原生 session_plugin_config）。",
+    "items": {
+      "enabled": {
+        "description": "启用注入摘除",
+        "type": "bool",
+        "default": true,
+        "hint": "对面板里勾选了『摘除』的标记块生效；只摘带 <tag>...</tag> 的块，无标记的注入摘不了。"
+      }
+    }
+  },
+  "debug_log": {
+    "description": "调试日志",
+    "type": "bool",
+    "default": false,
+    "hint": "开启后每次审计/摘除/人格卡处理都会打 debug 日志。"
+  }
+}

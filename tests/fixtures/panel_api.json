@@ -1,0 +1,409 @@
+{
+  "overview": {
+    "ok": true,
+    "data_dir": "<AstrBot data dir>\\astrbot_plugin_prompt_governor",
+    "config": {
+      "enabled": true,
+      "audit_enabled": true,
+      "capture_content": true,
+      "history_limit": 50,
+      "trim_enabled": true,
+      "persona_card_enabled": true,
+      "persona_card_max_chars": 120,
+      "debug_log": false
+    },
+    "counts": {
+      "sessions": 1,
+      "cards": 1,
+      "global_rules": 1,
+      "session_rules": 1,
+      "plugins": 3
+    },
+    "rules_global": [
+      "long_term_memory"
+    ],
+    "rules_sessions": {
+      "aiocqhttp:GroupMessage:1001": [
+        "emotion_system"
+      ]
+    },
+    "sessions": [
+      {
+        "umo": "aiocqhttp:GroupMessage:1001",
+        "turns": 2,
+        "last_t": 1770000060.0,
+        "before_chars": 1500,
+        "after_chars": 1140,
+        "parts_chars": 240,
+        "removed_tags": [
+          "emotion_system"
+        ],
+        "persona_card_used": true,
+        "blocks": 0
+      }
+    ],
+    "cards": {
+      "p1": {
+        "chars": 95,
+        "created_at": 1767225600.0
+      }
+    },
+    "last_turn": {
+      "t": 1770000060.0,
+      "umo": "aiocqhttp:GroupMessage:1001",
+      "before_chars": 1500,
+      "after_chars": 1140,
+      "parts_chars": 240,
+      "removed_tags": [
+        "emotion_system"
+      ],
+      "persona_card_used": true,
+      "blocks": []
+    }
+  },
+  "blocks": {
+    "ok": true,
+    "umo": "aiocqhttp:GroupMessage:1001",
+    "window": 20,
+    "turns": 2,
+    "session_tags": [
+      "emotion_system"
+    ],
+    "global_tags": [
+      "long_term_memory"
+    ],
+    "blocks": [
+      {
+        "key": "safety_override",
+        "tag": "safety_override",
+        "kind": "tag",
+        "owner": "astrbot_plugin_ai_mind",
+        "where": "content_part",
+        "removable": false,
+        "protected": true,
+        "chars": 60,
+        "text": "<safety_override>认真关心。</safety_override>",
+        "seen_turns": 1,
+        "last_t": 1770000000.0,
+        "session_removed": false,
+        "global_removed": false,
+        "effective_removed": false
+      },
+      {
+        "key": "persona",
+        "tag": "",
+        "kind": "persona",
+        "owner": "(persona)",
+        "where": "system",
+        "removable": false,
+        "protected": false,
+        "chars": 1000,
+        "text": "# Persona Instructions\n\n你是小雪。",
+        "seen_turns": 1,
+        "last_t": 1770000000.0,
+        "session_removed": false,
+        "global_removed": false,
+        "effective_removed": false
+      },
+      {
+        "key": "long_term_memory",
+        "tag": "long_term_memory",
+        "kind": "tag",
+        "owner": "astrbot_plugin_ai_mind",
+        "where": "system",
+        "removable": true,
+        "protected": false,
+        "chars": 260,
+        "text": "<long_term_memory>他喜欢冰美式。</long_term_memory>",
+        "seen_turns": 1,
+        "last_t": 1770000000.0,
+        "session_removed": false,
+        "global_removed": true,
+        "effective_removed": true
+      },
+      {
+        "key": "emotion_system",
+        "tag": "emotion_system",
+        "kind": "tag",
+        "owner": "astrbot_plugin_ai_mind",
+        "where": "system",
+        "removable": true,
+        "protected": false,
+        "chars": 120,
+        "text": "<emotion_system>有点困。</emotion_system>",
+        "seen_turns": 1,
+        "last_t": 1770000000.0,
+        "session_removed": true,
+        "global_removed": false,
+        "effective_removed": true
+      }
+    ]
+  },
+  "trim": {
+    "ok": true,
+    "umo": "aiocqhttp:GroupMessage:1001",
+    "scope": "session",
+    "session_tags": [
+      "emotion_system"
+    ],
+    "global_tags": [
+      "long_term_memory"
+    ],
+    "effective_tags": [
+      "emotion_system",
+      "long_term_memory"
+    ],
+    "rules": {
+      "aiocqhttp:GroupMessage:1001": [
+        "emotion_system"
+      ],
+      "*": [
+        "long_term_memory"
+      ]
+    }
+  },
+  "history": {
+    "ok": true,
+    "umo": "aiocqhttp:GroupMessage:1001",
+    "limit": 10,
+    "records": [
+      {
+        "t": 1770000000.0,
+        "umo": "aiocqhttp:GroupMessage:1001",
+        "before_chars": 1500,
+        "after_chars": 1180,
+        "parts_chars": 240,
+        "removed_tags": [
+          "emotion_system"
+        ],
+        "persona_card_used": true,
+        "blocks": [
+          {
+            "kind": "persona",
+            "tag": "",
+            "owner": "(persona)",
+            "chars": 1000,
+            "where": "system",
+            "removable": false,
+            "protected": false,
+            "text": "# Persona Instructions\n\n你是小雪。"
+          },
+          {
+            "kind": "tag",
+            "tag": "long_term_memory",
+            "owner": "astrbot_plugin_ai_mind",
+            "chars": 260,
+            "where": "system",
+            "removable": true,
+            "protected": false,
+            "text": "<long_term_memory>他喜欢冰美式。</long_term_memory>"
+          },
+          {
+            "kind": "tag",
+            "tag": "emotion_system",
+            "owner": "astrbot_plugin_ai_mind",
+            "chars": 120,
+            "where": "system",
+            "removable": true,
+            "protected": false,
+            "text": "<emotion_system>有点困。</emotion_system>"
+          },
+          {
+            "kind": "tag",
+            "tag": "safety_override",
+            "owner": "astrbot_plugin_ai_mind",
+            "chars": 60,
+            "where": "content_part",
+            "removable": false,
+            "protected": true,
+            "text": "<safety_override>认真关心。</safety_override>"
+          }
+        ]
+      },
+      {
+        "t": 1770000060.0,
+        "umo": "aiocqhttp:GroupMessage:1001",
+        "before_chars": 1500,
+        "after_chars": 1140,
+        "parts_chars": 240,
+        "removed_tags": [
+          "emotion_system"
+        ],
+        "persona_card_used": true,
+        "blocks": []
+      }
+    ]
+  },
+  "persona": {
+    "ok": true,
+    "persona_card_enabled": true,
+    "persona_card_max_chars": 120,
+    "config": {
+      "enabled": true,
+      "audit_enabled": true,
+      "capture_content": true,
+      "history_limit": 50,
+      "trim_enabled": true,
+      "persona_card_enabled": true,
+      "persona_card_max_chars": 120,
+      "debug_log": false
+    },
+    "personas": [
+      {
+        "id": "p1",
+        "name": "小雪",
+        "chars": 27,
+        "hash": "15196508501af80a",
+        "card_cached": true,
+        "card_chars": 95,
+        "card_created_at": 1767225600.0,
+        "sectioned": true,
+        "sections": [
+          {
+            "key": "behavior",
+            "name": "行为举止",
+            "chars": 19,
+            "preview": "说话轻声，爱蹭人；被夸会害羞地别过头。",
+            "text": "说话轻声，爱蹭人；被夸会害羞地别过头。"
+          },
+          {
+            "key": "background",
+            "name": "背景故事",
+            "chars": 17,
+            "preview": "在街角咖啡店打工，住阁楼，怕打雷。",
+            "text": "在街角咖啡店打工，住阁楼，怕打雷。"
+          },
+          {
+            "key": "style",
+            "name": "语言风格",
+            "chars": 13,
+            "preview": "句尾常带「喵」，句子很短。",
+            "text": "句尾常带「喵」，句子很短。"
+          }
+        ],
+        "card_stale": true
+      },
+      {
+        "id": "p2",
+        "name": "阿岚",
+        "chars": 12,
+        "hash": "167fe3d316268658",
+        "card_cached": false,
+        "card_chars": 0,
+        "card_created_at": 0.0,
+        "sectioned": false,
+        "sections": [],
+        "card_stale": false
+      }
+    ],
+    "cards": {
+      "p1": {
+        "card": "小雪：猫耳女仆，说话软软的，黏人但有点怕生。\n【行为举止】\n说话轻声，爱蹭人；被夸会害羞地别过头。\n【语言风格】\n句尾常带「喵」，句子很短。\n【背景故事】\n在街角咖啡店打工，住阁楼，怕打雷。",
+        "chars": 95,
+        "created_at": 1767225600.0,
+        "persona_hash": "old-hash-before-persona-edit",
+        "summary": "小雪：猫耳女仆，说话软软的，黏人但有点怕生。",
+        "sectioned": true,
+        "sections": [
+          {
+            "key": "behavior",
+            "name": "行为举止",
+            "chars": 19,
+            "preview": "说话轻声，爱蹭人；被夸会害羞地别过头。",
+            "text": "说话轻声，爱蹭人；被夸会害羞地别过头。"
+          },
+          {
+            "key": "background",
+            "name": "背景故事",
+            "chars": 17,
+            "preview": "在街角咖啡店打工，住阁楼，怕打雷。",
+            "text": "在街角咖啡店打工，住阁楼，怕打雷。"
+          },
+          {
+            "key": "style",
+            "name": "语言风格",
+            "chars": 13,
+            "preview": "句尾常带「喵」，句子很短。",
+            "text": "句尾常带「喵」，句子很短。"
+          }
+        ]
+      }
+    },
+    "orphan_cards": [],
+    "section_names": {
+      "behavior": "行为举止",
+      "background": "背景故事",
+      "style": "语言风格",
+      "relationship": "关系立场"
+    }
+  },
+  "plugin_toggle": {
+    "ok": true,
+    "umo": "aiocqhttp:GroupMessage:1001",
+    "writable": true,
+    "disabled": [
+      "astrbot_plugin_humanize_guard"
+    ],
+    "enabled": [],
+    "whitelist_mode": false,
+    "plugins": [
+      {
+        "name": "astrbot_plugin_ai_mind_simple",
+        "desc": "情绪与记忆",
+        "reserved": false,
+        "activated": true,
+        "has_hooks": false,
+        "disabled": false,
+        "whitelisted": false
+      },
+      {
+        "name": "astrbot_plugin_humanize_guard",
+        "desc": "人味守卫",
+        "reserved": false,
+        "activated": true,
+        "has_hooks": false,
+        "disabled": true,
+        "whitelisted": false
+      },
+      {
+        "name": "astrbot",
+        "desc": "核心",
+        "reserved": true,
+        "activated": true,
+        "has_hooks": false,
+        "disabled": false,
+        "whitelisted": false
+      }
+    ]
+  },
+  "persona_generate": {
+    "ok": true,
+    "persona_id": "p2",
+    "card": "阿岚：图书馆管理员，冷静克制、话少但很稳。\n【行为举止】说话慢半拍，习惯先想再说；不主动碰别人。\n【语言风格】短句、书面语，很少用感叹号。\n【关系立场】\n对熟人才会主动多说两句，讨厌被催促。",
+    "summary": "阿岚：图书馆管理员，冷静克制、话少但很稳。",
+    "sections": [
+      {
+        "key": "behavior",
+        "name": "行为举止",
+        "chars": 20,
+        "preview": "说话慢半拍，习惯先想再说；不主动碰别人。",
+        "text": "说话慢半拍，习惯先想再说；不主动碰别人。"
+      },
+      {
+        "key": "style",
+        "name": "语言风格",
+        "chars": 14,
+        "preview": "短句、书面语，很少用感叹号。",
+        "text": "短句、书面语，很少用感叹号。"
+      },
+      {
+        "key": "relationship",
+        "name": "关系立场",
+        "chars": 18,
+        "preview": "对熟人才会主动多说两句，讨厌被催促。",
+        "text": "对熟人才会主动多说两句，讨厌被催促。"
+      }
+    ],
+    "manifest": "<persona_card>\n阿岚：图书馆管理员，冷静克制、话少但很稳。\n可选部分（要哪部分就用 recall_persona 的 section 取）：behavior=行为举止（语气、口头禅、动作、表情包偏好等）；style=语言风格（句式长短、用词习惯、禁用的说法）；relationship=关系立场（对用户/他人的称呼与态度边界）\n</persona_card>"
+  }
+}

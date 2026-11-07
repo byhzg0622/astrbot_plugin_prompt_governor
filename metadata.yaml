@@ -1,0 +1,23 @@
+name: astrbot_plugin_prompt_governor
+display_name: 注入管家（Prompt Governor）
+short_desc: 审计所有注入词，人格档案分区按需召回，标记块摘除与插件精简
+desc: >-
+  看清每一轮 LLM 请求里到底注入了什么：审计层在插件注入前后各拍一次快照，
+  面板上能看到人格、每个插件注入块的位置、字符数与来源归因。
+
+  人格瘦身：人格只整理一次，产出「摘要 + 若干部分（行为举止 / 背景故事 /
+  语言风格 / 关系立场）」；每轮只注入摘要与部分目录，模型要哪部分就用
+  recall_persona(section=…) 取哪部分 —— 不再每轮重复注入整份人格。
+  面板上可以直接调 AI 生成；档案生成一次就固定下来（未生成的会在首次对话
+  自动生成），人格正文改了也不自动重算，只在面板提示、由你决定是否重写。
+
+  注入精简：带标记的注入块（<xxx>...</xxx>）可在面板按会话摘除；
+  会话级插件开关直接对接 AstrBot 原生 session_plugin_config。
+
+  全程只动自家与「标记块」内容，不 monkey-patch 任何第三方插件。
+version: v1.3
+author: DSH
+astrbot_version: ">=4.5,<5"
+pages:
+  - name: governor
+    title: 注入管家
