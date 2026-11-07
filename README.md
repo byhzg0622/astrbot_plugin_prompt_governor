@@ -1,0 +1,2 @@
+# astrbot_plugin_prompt_governor
+一个astrbot里可以查看并禁用全部插件塞给ai的提示词的插件，同时附带了一个把人格设定设置成可调用的卡组的能力，一定幅度上缩减了一些token的消耗
