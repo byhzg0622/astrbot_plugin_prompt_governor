@@ -1,0 +1,105 @@
+......F..............................F.......F....................................
+======================================================================
+FAIL: test_each_block_trimmable_independently (astrbot_plugin_prompt_governor.tests.test_core.TestMergeAndOrder.test_each_block_trimmable_independently)
+每个块保留精确来源文本，勾选哪行只摘哪行，不影响其他块。
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\工作区\astrbot_plugin_prompt_governor\..\astrbot_plugin_prompt_governor\tests\test_core.py", line 432, in test_each_block_trimmable_independently
+    self.assertGreaterEqual(len(blocks), 2)
+AssertionError: 1 not greater than or equal to 2
+
+======================================================================
+FAIL: test_agent_done_skips_history_keeps_new_tool_output (astrbot_plugin_prompt_governor.tests.test_hooks.FullChannelScanCase.test_agent_done_skips_history_keeps_new_tool_output)
+agent 多轮补审计只记「本轮新内容」，不把整段历史重复列成注入。
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\byhzg\AppData\Local\Programs\Python\Python312\Lib\unittest\async_case.py", line 90, in _callTestMethod
+    if self._callMaybeAsync(method) is not None:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\byhzg\AppData\Local\Programs\Python\Python312\Lib\unittest\async_case.py", line 112, in _callMaybeAsync
+    return self._asyncioRunner.run(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\byhzg\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\byhzg\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "D:\工作区\astrbot_plugin_prompt_governor\..\astrbot_plugin_prompt_governor\tests\test_hooks.py", line 641, in test_agent_done_skips_history_keeps_new_tool_output
+    self.assertNotIn("适合出门", texts)           # 历史旧回复不重复记
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '适合出门' unexpectedly found in '系统提示\n旧的回复：今天天气不错，适合出门。\n工具结果：\n<long_term_memory>他今天心情不好。</long_term_memory>'
+
+======================================================================
+FAIL: test_text_rule_trims_untagged_block (astrbot_plugin_prompt_governor.tests.test_hooks.FullChannelScanCase.test_text_rule_trims_untagged_block)
+无 tag 的注入也能按原文拦截（旧版只能摘 tag）。
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\byhzg\AppData\Local\Programs\Python\Python312\Lib\unittest\async_case.py", line 90, in _callTestMethod
+    if self._callMaybeAsync(method) is not None:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\byhzg\AppData\Local\Programs\Python\Python312\Lib\unittest\async_case.py", line 112, in _callMaybeAsync
+    return self._asyncioRunner.run(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\byhzg\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\byhzg\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "D:\工作区\astrbot_plugin_prompt_governor\..\astrbot_plugin_prompt_governor\tests\test_hooks.py", line 468, in test_text_rule_trims_untagged_block
+    self.assertNotIn("颜文字", req2.system_prompt)
+AssertionError: '颜文字' unexpectedly found in '核心人设。\n\n【注入】回复必须用颜文字。'
+
+----------------------------------------------------------------------
+Ran 82 tests in 10.432s
+
+FAILED (failures=3)
+
+RESULT False 3 0
+
+FAIL test_each_block_trimmable_independently (astrbot_plugin_prompt_governor.tests.test_core.TestMergeAndOrder.test_each_block_trimmable_independently)
+Traceback (most recent call last):
+  File "D:\工作区\astrbot_plugin_prompt_governor\..\astrbot_plugin_prompt_governor\tests\test_core.py", line 432, in test_each_block_trimmable_independently
+    self.assertGreaterEqual(len(blocks), 2)
+AssertionError: 1 not greater than or equal to 2
+
+
+FAIL test_agent_done_skips_history_keeps_new_tool_output (astrbot_plugin_prompt_governor.tests.test_hooks.FullChannelScanCase.test_agent_done_skips_history_keeps_new_tool_output)
+Traceback (most recent call last):
+  File "C:\Users\byhzg\AppData\Local\Programs\Python\Python312\Lib\unittest\async_case.py", line 90, in _callTestMethod
+    if self._callMaybeAsync(method) is not None:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\byhzg\AppData\Local\Programs\Python\Python312\Lib\unittest\async_case.py", line 112, in _callMaybeAsync
+    return self._asyncioRunner.run(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\byhzg\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\byhzg\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "D:\工作区\astrbot_plugin_prompt_governor\..\astrbot_plugin_prompt_governor\tests\test_hooks.py", line 641, in test_agent_done_skips_history_keeps_new_tool_output
+    self.assertNotIn("适合出门", texts)           # 历史旧回复不重复记
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '适合出门' unexpectedly found in '系统提示\n旧的回复：今天天气不错，适合出门。\n工具结果：\n<long_term_memory>他今天心情不好。</long_term_memory>'
+
+
+FAIL test_text_rule_trims_untagged_block (astrbot_plugin_prompt_governor.tests.test_hooks.FullChannelScanCase.test_text_rule_trims_untagged_block)
+Traceback (most recent call last):
+  File "C:\Users\byhzg\AppData\Local\Programs\Python\Python312\Lib\unittest\async_case.py", line 90, in _callTestMethod
+    if self._callMaybeAsync(method) is not None:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\byhzg\AppData\Local\Programs\Python\Python312\Lib\unittest\async_case.py", line 112, in _callMaybeAsync
+    return self._asyncioRunner.run(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\byhzg\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\byhzg\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "D:\工作区\astrbot_plugin_prompt_governor\..\astrbot_plugin_prompt_governor\tests\test_hooks.py", line 468, in test_text_rule_trims_untagged_block
+    self.assertNotIn("颜文字", req2.system_prompt)
+AssertionError: '颜文字' unexpectedly found in '核心人设。\n\n【注入】回复必须用颜文字。'
+
